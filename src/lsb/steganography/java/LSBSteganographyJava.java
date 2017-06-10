@@ -7,12 +7,14 @@ package lsb.steganography.java;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
@@ -24,9 +26,15 @@ public class LSBSteganographyJava extends Application {
     @Override
     public void start( Stage stage ) {
         
+        GridPane grid = new GridPane();
+        grid.setPadding( new Insets( 15, 10, 15, 10) );
+        //grid.setGridLinesVisible(true);
+        //grid.setAlignment(Pos.TOP_CENTER);
+        grid.setHgap( 10 );
+        grid.setVgap( 10 );
         // create root node for title
-        HBox hbox = new HBox(8);
-        hbox.setAlignment( Pos.TOP_CENTER );
+        HBox hbox = new HBox();
+        hbox.setPrefWidth( 600 );
         // padding the title
         hbox.setPadding( new Insets( 15, 10, 15, 10 ) );
         
@@ -34,9 +42,30 @@ public class LSBSteganographyJava extends Application {
         mainTitle.setFont( Font.font( "Verdana", FontWeight.BOLD, 30 ) );
         // adding child node into root node
         hbox.getChildren().add( mainTitle );
+        grid.add( hbox, 1, 0 );
         
-        Scene scene = new Scene( hbox, 300, 100 );
+        // Step 1 Label
+        Label step1 = new Label( "Step 1 : Choose Secret File" );
+        grid.add( step1, 0, 1 );
+        
+        // Hbox Container 
+        HBox step1Container  = new HBox();
+        step1Container.getStyleClass().add( "hbox-container" );
+        step1Container.setPadding( new Insets( 15, 10, 15, 10 ) );
+        
+        grid.add( step1Container, 0, 2, 2, 1 );
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle( "Open Secret File" );
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Text Files", "*.txt")
+        );
+        
+        // scene
+        Scene scene = new Scene( grid, 700, 400 );
         stage.setScene( scene );
+        scene.getStylesheets().add( "MainStyle.css" );
+        
         // make default width and height
         stage.setMinWidth( 400 );
         stage.setMinHeight( 300 );
