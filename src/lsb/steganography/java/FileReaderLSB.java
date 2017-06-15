@@ -5,11 +5,13 @@
  */
 package lsb.steganography.java;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -32,7 +34,7 @@ class FileReaderLSB {
      * Read file and return byte array
      * @throws Exception 
      */
-    protected char[] readByte () throws Exception {
+    protected char[] readChar () throws Exception {
         
         charData = new char[ (int) file.length() ];
         
@@ -55,6 +57,15 @@ class FileReaderLSB {
         
         return charData;
         
+    }
+    
+    protected int[] readPixel () throws Exception {
+        
+        BufferedImage bi = ImageIO.read( file );
+        int[] rgbArray = new int[ bi.getWidth() * bi.getHeight() * 4];
+        bi.getRGB(0, 0, bi.getWidth(), bi.getHeight(), rgbArray,0,0);
+        System.out.println(rgbArray[1]);
+        return rgbArray;
     }
     
 }
