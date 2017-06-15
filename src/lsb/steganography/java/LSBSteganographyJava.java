@@ -5,9 +5,13 @@
  */
 package lsb.steganography.java;
 
+import java.io.File;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,10 +27,14 @@ import javafx.stage.Stage;
  */
 public class LSBSteganographyJava extends Application {
     
+    private File selectedFile;
+    private GridPane grid;
+    private Scene mainScene;
+    
     @Override
     public void start( Stage stage ) {
         
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setPadding( new Insets( 15, 10, 15, 10) );
         //grid.setGridLinesVisible(true);
         //grid.setAlignment(Pos.TOP_CENTER);
@@ -51,20 +59,47 @@ public class LSBSteganographyJava extends Application {
         // Hbox Container 
         HBox step1Container  = new HBox();
         step1Container.getStyleClass().add( "hbox-container" );
-        step1Container.setPadding( new Insets( 15, 10, 15, 10 ) );
-        
+        step1Container.setPadding( new Insets( 15, 10, 15, 10 ) );   
         grid.add( step1Container, 0, 2, 2, 1 );
         
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle( "Open Secret File" );
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Text Files", "*.txt")
-        );
+        Button btnChooseSecret = new Button( "Choose File" );
+        btnChooseSecret.setOnAction( new EventHandler<ActionEvent> () {
+            
+            
+            @Override
+            public void handle( ActionEvent e ){
+                
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle( "Open Secret File" );
+                fileChooser.getExtensionFilters().addAll(
+                        new ExtensionFilter("Text Files", "*.txt")
+                );
+                
+                selectedFile = fileChooser.showOpenDialog( stage );
+                
+                if ( selectedFile != null ) {
+                    
+                    FileReaderLSB fr = new FileReaderLSB( selectedFile );
+                    
+                    try {
+                        char[] charData = fr.readByte();
+                        System.out.println(charData);
+                    }
+                    catch( Exception exc ) {
+                        System.out.println( Msg.ERROR_READING_FILE );
+                    }
+                    
+                    
+                }
+            }
+        });
         
+        step1Container.getChildren().add( btnChooseSecret );
+       
         // scene
-        Scene scene = new Scene( grid, 700, 400 );
-        stage.setScene( scene );
-        scene.getStylesheets().add( "MainStyle.css" );
+        mainScene = new Scene( grid, 700, 400 );
+        stage.setScene( mainScene );
+        mainScene.getStylesheets().add( "MainStyle.css" );
         
         // make default width and height
         stage.setMinWidth( 400 );
